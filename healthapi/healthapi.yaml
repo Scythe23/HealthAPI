@@ -24,7 +24,7 @@ spec:
         maxReplicas: 2
         containers:
           - name: kserve-container
-            image: jerushan/transanalyzerui:1.0.3
+            image: rahulcruze786/ml_project_transac-analyzer-dev:0.0.1
             ports:
               - containerPort: 8080
                 protocol: TCP
