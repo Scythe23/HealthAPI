@@ -24,7 +24,7 @@ spec:
         maxReplicas: 2
         containers:
           - name: kserve-container
-            image: jerushan/transactionanalyzerapi:0.0.2
+            image: jerushan/transactionanalyzerapi:0.0.1
             ports:
               - containerPort: 8080
                 protocol: TCP
