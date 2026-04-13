@@ -1,0 +1,29 @@
+apiVersion: ai.sap.com/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: training-service-template
+  annotations:
+    scenarios.ai.sap.com/description: "Train model using custom Docker image"
+    scenarios.ai.sap.com/name: "Custom Model Training"
+spec:
+  entrypoint: main
+  templates:
+    - name: main
+      inputs:
+        parameters:
+          - name: epochs
+            value: "10"
+          - name: learning_rate
+            value: "0.001"
+      container:
+        image: docker.io/rahulcruze786/training-service:v1.2
+        command: [ "python", "app.py" ]
+        args:
+          - "--epochs"
+          - "{{inputs.parameters.epochs}}"
+          - "--learning_rate"
+          - "{{inputs.parameters.learning_rate}}"
+        resources:
+          limits:
+            cpu: "1"
+            memory: "2Gi"
