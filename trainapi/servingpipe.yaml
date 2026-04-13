@@ -12,9 +12,6 @@ metadata:
     ai.sap.com/version: "1.0.0"
 spec:
   inputs:
-    parameters:
-      - name: greetMessage
-        type: string
     artifacts:
       - name: trainedmodels
   template:
@@ -23,17 +20,26 @@ spec:
         autoscaling.knative.dev/minScale: "1"
         autoscaling.knative.dev/maxScale: "5"
     spec:
+      # ── No imagePullSecrets - public image ──────────────────────────────────
       containers:
         - name: kserve-container
-          image: docker.io/rahulcruze786/training-service:v1.2
+          image: docker.io/jerushan/sap-ai-core-poc-serving:latest
           ports:
             - containerPort: 8080
               protocol: TCP
+          command: ["python", "src/prediction/predict.py"]
           env:
+            - name: MODEL_PATH
+              value: "/mnt/models/model.pkl"
+            - name: SCALER_PATH
+              value: "/mnt/models/scaler.pkl"
             - name: STORAGE_URI
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.annotations['serving.kserve.io/storageUri']
+          volumeMounts:
+            - name: models-volume
+              mountPath: /mnt/models
           resources:
             requests:
               cpu: "0.5"
@@ -41,3 +47,15 @@ spec:
             limits:
               cpu: "1"
               memory: "1Gi"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 5
