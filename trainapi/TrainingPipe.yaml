@@ -12,6 +12,14 @@ metadata:
     ai.sap.com/version: "1.0.0"
 spec:
   entrypoint: training-pipeline
+  arguments:
+    parameters:
+      - name: raw-data-path
+        value: "/app/data/raw"
+      - name: processed-data-path
+        value: "/app/data/processed"
+      - name: model-output-path
+        value: "/app/models"
   templates:
     - name: training-pipeline
       steps:
@@ -19,54 +27,60 @@ spec:
             template: preprocess-step
         - - name: train
             template: train-step
-    
+
     - name: preprocess-step
       metadata:
         labels:
           ai.sap.com/resourcePlan: starter
       container:
-        image: docker.io/rahulcruze786/training-service:v1.2
-        command: [python, src/preprocess.py]
+        # ── No imagePullSecrets - public image ────────────────────────────────
+        image: docker.io/your-dockerhub-username/sap-ai-core-poc:latest
+        command: ["python", "src/training/preprocess.py"]
         env:
-          - name: DATA_PATH
-            value: "/app/data"
+          - name: RAW_DATA_PATH
+            value: "{{workflow.parameters.raw-data-path}}"
+          - name: PROCESSED_DATA_PATH
+            value: "{{workflow.parameters.processed-data-path}}"
         volumeMounts:
           - name: input-data
-            mountPath: /app/data
+            mountPath: /app/data/raw
           - name: processed-data
-            mountPath: /app/processed
+            mountPath: /app/data/processed
       inputs:
         artifacts:
           - name: input-data
-            path: /app/data
+            path: /app/data/raw
       outputs:
         artifacts:
           - name: processed-data
-            path: /app/processed
+            path: /app/data/processed
 
     - name: train-step
       metadata:
         labels:
           ai.sap.com/resourcePlan: starter
       container:
-        image: docker.io/rahulcruze786/training-service:v1.2
-        command: [python, src/training/train.py]
+        # ── No imagePullSecrets - public image ────────────────────────────────
+        image: docker.io/your-dockerhub-username/sap-ai-core-poc:latest
+        command: ["python", "src/training/train.py"]
         env:
+          - name: PROCESSED_DATA_PATH
+            value: "{{workflow.parameters.processed-data-path}}"
           - name: MODEL_OUTPUT_PATH
-            value: "/app/model"
+            value: "{{workflow.parameters.model-output-path}}"
         volumeMounts:
           - name: processed-data
-            mountPath: /app/processed
+            mountPath: /app/data/processed
           - name: model-output
-            mountPath: /app/model
+            mountPath: /app/models
       inputs:
         artifacts:
           - name: processed-data
-            path: /app/processed
+            path: /app/data/processed
       outputs:
         artifacts:
           - name: model-output
             globalName: trainedmodels
-            path: /app/model
+            path: /app/models
             archive:
               none: {}
