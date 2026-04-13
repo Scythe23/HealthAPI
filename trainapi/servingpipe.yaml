@@ -1,0 +1,43 @@
+apiVersion: ai.sap.com/v1alpha1
+kind: ServingTemplate
+metadata:
+  name: sap-ai-core-poc-serving
+  annotations:
+    scenarios.ai.sap.com/description: "POC Serving Template"
+    scenarios.ai.sap.com/name: "sap-ai-core-poc"
+    executables.ai.sap.com/description: "Serve POC model predictions"
+    executables.ai.sap.com/name: "poc-serving"
+  labels:
+    scenarios.ai.sap.com/id: "sap-ai-core-poc"
+    ai.sap.com/version: "1.0.0"
+spec:
+  inputs:
+    parameters:
+      - name: greetMessage
+        type: string
+    artifacts:
+      - name: trainedmodels
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: "1"
+        autoscaling.knative.dev/maxScale: "5"
+    spec:
+      containers:
+        - name: kserve-container
+          image: docker.io/rahulcruze786/training-service:v1.2
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: STORAGE_URI
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.annotations['serving.kserve.io/storageUri']
+          resources:
+            requests:
+              cpu: "0.5"
+              memory: "512Mi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"
