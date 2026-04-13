@@ -15,7 +15,6 @@ spec:
     artifacts:
       - name: trainedmodels
   template:
-    apiVersion: "serving.kserve.io/v1beta1"
     metadata:
       annotations: "{}"
       labels: "{\"ai.sap.com/resourcePlan\": \"starter\"}"
