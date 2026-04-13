@@ -34,19 +34,14 @@ spec:
             value: "/app/data/processed"
           - name: MODEL_OUTPUT_PATH
             value: "/app/models"
-        volumeMounts:
-          - name: input-data
-            mountPath: /app/data/raw
-          - name: model-output
-            mountPath: /app/models
       inputs:
         artifacts:
           - name: input-data
-            path: /app/data/raw
+            path: /app/data/raw        # ← only mount raw data input here
       outputs:
         artifacts:
           - name: model-output
             globalName: trainedmodels
-            path: /app/models
+            path: /app/models          # ← only output models here
             archive:
               none: {}
