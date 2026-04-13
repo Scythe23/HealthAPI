@@ -1,12 +1,12 @@
 apiVersion: ai.sap.com/v1alpha1
 kind: ServingTemplate
 metadata:
-  name: sap-ai-core-poc-serving
+  name: sap-ai-core-poc-serving-v2
   annotations:
     scenarios.ai.sap.com/description: "POC Serving Template"
     scenarios.ai.sap.com/name: "sap-ai-core-poc"
     executables.ai.sap.com/description: "Serve POC model predictions"
-    executables.ai.sap.com/name: "poc-serving"
+    executables.ai.sap.com/name: "poc-serving-v2"
   labels:
     scenarios.ai.sap.com/id: "sap-ai-core-poc"
     ai.sap.com/version: "1.0.0"
