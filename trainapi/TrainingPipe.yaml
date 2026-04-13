@@ -12,71 +12,37 @@ metadata:
     ai.sap.com/version: "1.0.0"
 spec:
   entrypoint: training-pipeline
-  arguments:
-    parameters:
-      - name: raw-data-path
-        value: "/app/data/raw"
-      - name: processed-data-path
-        value: "/app/data/processed"
-      - name: model-output-path
-        value: "/app/models"
   templates:
     - name: training-pipeline
       steps:
-        - - name: preprocess
-            template: preprocess-step
         - - name: train
             template: train-step
-
-    - name: preprocess-step
-      metadata:
-        labels:
-          ai.sap.com/resourcePlan: starter
-      container:
-        # ── No imagePullSecrets - public image ────────────────────────────────
-        image: docker.io/jerushan/sap-ai-core-poc:latest
-        command: ["python", "src/training/preprocess.py"]
-        env:
-          - name: RAW_DATA_PATH
-            value: "{{workflow.parameters.raw-data-path}}"
-          - name: PROCESSED_DATA_PATH
-            value: "{{workflow.parameters.processed-data-path}}"
-        volumeMounts:
-          - name: input-data
-            mountPath: /app/data/raw
-          - name: processed-data
-            mountPath: /app/data/processed
-      inputs:
-        artifacts:
-          - name: input-data
-            path: /app/data/raw
-      outputs:
-        artifacts:
-          - name: processed-data
-            path: /app/data/processed
 
     - name: train-step
       metadata:
         labels:
           ai.sap.com/resourcePlan: starter
       container:
-        # ── No imagePullSecrets - public image ────────────────────────────────
         image: docker.io/jerushan/sap-ai-core-poc:latest
-        command: ["python", "src/training/train.py"]
+        command: ["python"]
+        args:
+          - "src/training/train.py"
         env:
+          - name: RAW_DATA_PATH
+            value: "/app/data/raw"
           - name: PROCESSED_DATA_PATH
-            value: "{{workflow.parameters.processed-data-path}}"
+            value: "/app/data/processed"
           - name: MODEL_OUTPUT_PATH
-            value: "{{workflow.parameters.model-output-path}}"
+            value: "/app/models"
         volumeMounts:
-          - name: processed-data
-            mountPath: /app/data/processed
+          - name: input-data
+            mountPath: /app/data/raw
           - name: model-output
             mountPath: /app/models
       inputs:
         artifacts:
-          - name: processed-data
-            path: /app/data/processed
+          - name: input-data
+            path: /app/data/raw
       outputs:
         artifacts:
           - name: model-output
