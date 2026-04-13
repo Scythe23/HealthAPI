@@ -23,7 +23,7 @@ spec:
         labels:
           ai.sap.com/resourcePlan: starter
       container:
-        image: docker.io/jerushan/sap-ai-core-poc:latest
+        image: docker.io/jerushan/sap-ai-core-poc:lates
         command: ["python"]
         args:
           - "src/training/train.py"
