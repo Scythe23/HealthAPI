@@ -33,7 +33,7 @@ spec:
           - name: PROCESSED_DATA_PATH
             value: "/tmp/processed"
           - name: MODEL_OUTPUT_PATH
-            value: "/app/models"
+            value: "/tmp/models"
       inputs:
         artifacts:
           - name: input-data
@@ -42,6 +42,6 @@ spec:
         artifacts:
           - name: model-output
             globalName: trainedmodels
-            path: /app/models          # ← only output models here
+            path: /tmp/models          # ← only output models here
             archive:
               none: {}
