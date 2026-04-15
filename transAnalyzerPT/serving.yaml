@@ -25,7 +25,7 @@ spec:
         maxReplicas: 2
         containers:
           - name: kserve-container
-            image: docker.io/jerushan/transanalyzerpt-serve:latestr
+            image: docker.io/jerushan/transanalyzerpt-serve:latest
             ports:
               - containerPort: 8080
                 protocol: TCP
