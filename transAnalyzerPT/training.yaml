@@ -26,7 +26,7 @@ spec:
         image: docker.io/jerushan/transanalyzer:train
         command: ["python"]
         args:
-          - "training/trainer.py"
+          - "training/app.py"
         env:
           - name: MODEL_OUTPUT_PATH
             value: "/tmp/models"
