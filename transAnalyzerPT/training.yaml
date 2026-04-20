@@ -23,7 +23,7 @@ spec:
         labels:
           ai.sap.com/resourcePlan: starter
       container:
-        image: docker.io/jerushan/transanalyzerpt-train:latest
+        image: docker.io/jerushan/transanalyzer:train
         command: ["python"]
         args:
           - "training/trainer.py"
