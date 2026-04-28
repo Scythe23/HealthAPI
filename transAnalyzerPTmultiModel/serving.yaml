@@ -10,13 +10,23 @@ metadata:
   labels:
     scenarios.ai.sap.com/id: "transanalyzerptm"
     ai.sap.com/version: "1.0.0"
-spec: |
+spec:
+  inputs:
+    artifacts:
+      - name: trainedmodels
+      - name: trainedmodelsnew
+  template:
+    apiVersion: "serving.kserve.io/v1beta1"
+    metadata:
+      annotations: "{}"
+      labels: "{\"ai.sap.com/resourcePlan\": \"starter\"}"
+    spec: |
       predictor:
         minReplicas: 1
         maxReplicas: 2
         containers:
           - name: kserve-container
-            image: docker.io/jerushan/transanalyzer:predm
+            image: docker.io/jerushan/transanalyzer:pred
             ports:
               - containerPort: 8080
                 protocol: TCP
@@ -26,7 +36,7 @@ spec: |
             env:
               - name: STORAGE_URI
                 value: "{{inputs.artifacts.trainedmodels}}"
-              - name: STORAGE_URI_N
+              - name: STORAGE_URI
                 value: "{{inputs.artifacts.trainedmodelsnew}}"
               - name: MODEL_PATH
                 value: "/mnt/models"
