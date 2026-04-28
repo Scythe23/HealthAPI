@@ -24,6 +24,34 @@ spec:
       predictor:
         minReplicas: 1
         maxReplicas: 2
+        volumes:
+          - name: models-new-volume
+            emptyDir: {}
+        initContainers:
+          - name: download-model2
+            image: amazon/aws-cli:latest
+            command: ["sh", "-c"]
+            args:
+              - |
+                aws s3 cp $STORAGE_URI_NEW /mnt/models_new/ --recursive
+            env:
+              - name: STORAGE_URI_NEW
+                value: "{{inputs.artifacts.trainedmodelsnew}}"
+              - name: AWS_ACCESS_KEY_ID
+                valueFrom:
+                  secretKeyRef:
+                    name: default
+                    key: accessKeyId
+              - name: AWS_SECRET_ACCESS_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: default
+                    key: secretAccessKey
+              - name: AWS_DEFAULT_REGION
+                value: "ap-southeast-1"
+            volumeMounts:
+              - name: models-new-volume
+                mountPath: /mnt/models_new
         containers:
           - name: kserve-container
             image: docker.io/jerushan/transanalyzer:pred
@@ -36,10 +64,13 @@ spec:
             env:
               - name: STORAGE_URI
                 value: "{{inputs.artifacts.trainedmodels}}"
-              - name: STORAGE_URI_NEW
-                value: "{{inputs.artifacts.trainedmodelsnew}}"
               - name: MODEL_PATH
-                value: "/mnt/models"
+                value: "/mnt/models"          # ← auto-mounted by AI Core
+              - name: MODEL_PATH_NEW
+                value: "/mnt/models_new"      # ← mounted via initContainer
+            volumeMounts:
+              - name: models-new-volume
+                mountPath: /mnt/models_new
             resources:
               requests:
                 cpu: "0.5"
