@@ -1,14 +1,14 @@
 apiVersion: ai.sap.com/v1alpha1
 kind: ServingTemplate
 metadata:
-  name: transanalyzerpt-serving
+  name: transanalyzerptm-serving
   annotations:
     scenarios.ai.sap.com/description: "transanalyzerpt Serving Template"
-    scenarios.ai.sap.com/name: "transanalyzerpt"
+    scenarios.ai.sap.com/name: "transanalyzerptm"
     executables.ai.sap.com/description: "Serve transanalyzerpt model predictions"
-    executables.ai.sap.com/name: "transanalyzerpt-serving"
+    executables.ai.sap.com/name: "transanalyzerptm-serving"
   labels:
-    scenarios.ai.sap.com/id: "transanalyzerpt"
+    scenarios.ai.sap.com/id: "transanalyzerptm"
     ai.sap.com/version: "1.0.0"
 spec:
   inputs:
