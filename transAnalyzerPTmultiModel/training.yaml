@@ -1,14 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
 metadata:
-  name: transanalyzerpt-training
+  name: transanalyzerptm-training
   annotations:
     scenarios.ai.sap.com/description: "transanalyzerpt Training Pipeline"
-    scenarios.ai.sap.com/name: "transanalyzerpt"
+    scenarios.ai.sap.com/name: "transanalyzerptm"
     executables.ai.sap.com/description: "Train the transanalyzerpt model"
-    executables.ai.sap.com/name: "transanalyzerpt-training"
+    executables.ai.sap.com/name: "transanalyzerptm-training"
   labels:
-    scenarios.ai.sap.com/id: "transanalyzerpt"
+    scenarios.ai.sap.com/id: "transanalyzerptm"
     ai.sap.com/version: "1.0.0"
 spec:
   entrypoint: training-pipeline
