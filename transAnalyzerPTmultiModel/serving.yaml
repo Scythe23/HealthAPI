@@ -26,7 +26,7 @@ spec:
         maxReplicas: 2
         containers:
           - name: kserve-container
-            image: docker.io/jerushan/transanalyzer:predm1
+            image: docker.io/jerushan/transanalyzer:predm
             ports:
               - containerPort: 8080
                 protocol: TCP
