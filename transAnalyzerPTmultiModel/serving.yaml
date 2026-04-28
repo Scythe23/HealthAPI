@@ -20,7 +20,7 @@ spec:
     metadata:
       annotations: "{}"
       labels: "{\"ai.sap.com/resourcePlan\": \"starter\"}"
-    spec: |
+    spec:                                    # ← removed the | 
       predictor:
         minReplicas: 1
         maxReplicas: 2
