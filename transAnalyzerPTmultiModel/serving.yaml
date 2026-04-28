@@ -54,7 +54,7 @@ spec:
                 mountPath: /mnt/models_new
         containers:
           - name: kserve-container
-            image: docker.io/jerushan/transanalyzer:pred
+            image: docker.io/jerushan/transanalyzer:predm
             ports:
               - containerPort: 8080
                 protocol: TCP
